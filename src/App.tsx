@@ -11,6 +11,7 @@ import { useAppSelector } from './hooks/redux';
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
 import TestimonialsPage from './pages/TestimonialsPage';
+import CreateFormPage from './pages/CreateFormPage';
 import WidgetPage from './pages/WidgetPage';
 import Sidebar from './components/Layout/Sidebar';
 import Header from './components/Layout/Header';
