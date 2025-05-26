@@ -34,6 +34,7 @@ const AppContent = () => {
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/testimonials" element={<TestimonialsPage />} />
+            <Route path="/create-form" element={<CreateFormPage />} />
             <Route path="/widget" element={<WidgetPage />} />
             <Route path="/analytics" element={<div className="text-center py-12"><h2 className="text-xl font-semibold">Analytics Coming Soon</h2></div>} />
             <Route path="/settings" element={<div className="text-center py-12"><h2 className="text-xl font-semibold">Settings Coming Soon</h2></div>} />

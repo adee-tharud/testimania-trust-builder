@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../hooks/redux';
 import { setFilter } from '../store/slices/testimonialsSlice';
 import TestimonialCard from '../components/Testimonials/TestimonialCard';
@@ -7,6 +8,7 @@ import { Button } from '../components/ui/button';
 import { Plus, Filter, MessageSquare } from 'lucide-react';
 
 const TestimonialsPage = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { testimonials, filter } = useAppSelector((state) => state.testimonials);
   
@@ -29,7 +31,7 @@ const TestimonialsPage = () => {
           <h1 className="text-2xl font-bold text-gray-900">Testimonials</h1>
           <p className="text-gray-600">Manage and organize your customer testimonials</p>
         </div>
-        <Button>
+        <Button onClick={() => navigate('/create-form')}>
           <Plus className="w-4 h-4 mr-2" />
           Create Form
         </Button>
@@ -73,7 +75,7 @@ const TestimonialsPage = () => {
               : `No ${filter} testimonials at the moment`
             }
           </p>
-          <Button>
+          <Button onClick={() => navigate('/create-form')}>
             <Plus className="w-4 h-4 mr-2" />
             Create Collection Form
           </Button>
