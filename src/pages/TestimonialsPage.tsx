@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from '../hooks/redux';
 import { setFilter } from '../store/slices/testimonialsSlice';
 import TestimonialCard from '../components/Testimonials/TestimonialCard';
 import { Button } from '../components/ui/button';
-import { Plus, Filter } from 'lucide-react';
+import { Plus, Filter, MessageSquare } from 'lucide-react';
 
 const TestimonialsPage = () => {
   const dispatch = useAppDispatch();
