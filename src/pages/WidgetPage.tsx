@@ -1,19 +1,18 @@
-
 import React from 'react';
 import { useAppSelector, useAppDispatch } from '../hooks/redux';
-import { updateConfig, generateEmbedCode } from '../store/slices/widgetSlice';
+import { updateConfig, generateEmbedCode, regenerateWidgetId } from '../store/slices/widgetSlice';
 import WidgetPreview from '../components/Widget/WidgetPreview';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Switch } from '../components/ui/switch';
-import { Copy, Code } from 'lucide-react';
+import { Copy, Code, RefreshCw, Eye } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 
 const WidgetPage = () => {
   const dispatch = useAppDispatch();
-  const { config, embedCode } = useAppSelector((state) => state.widget);
+  const { config, embedCode, widgetId } = useAppSelector((state) => state.widget);
 
   const handleConfigChange = (key: string, value: any) => {
     dispatch(updateConfig({ [key]: value }));
@@ -27,11 +26,19 @@ const WidgetPage = () => {
     });
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(embedCode);
+  const handleRegenerateId = () => {
+    dispatch(regenerateWidgetId());
+    toast({
+      title: 'Widget ID regenerated!',
+      description: 'A new unique widget ID has been created. Generate new embed code to use it.',
+    });
+  };
+
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
     toast({
       title: 'Copied!',
-      description: 'Embed code copied to clipboard.',
+      description: `${label} copied to clipboard.`,
     });
   };
 
@@ -44,6 +51,42 @@ const WidgetPage = () => {
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Widget ID</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="widgetId">Your Widget ID</Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    id="widgetId"
+                    value={widgetId}
+                    readOnly
+                    className="bg-gray-50 font-mono text-sm"
+                  />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => copyToClipboard(widgetId, 'Widget ID')}
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleRegenerateId}
+                    title="Generate new Widget ID"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  This unique ID identifies your widget. Copy it or regenerate a new one if needed.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Widget Settings</h3>
             
@@ -178,11 +221,30 @@ const WidgetPage = () => {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={copyToClipboard}
+                    onClick={() => copyToClipboard(embedCode, 'Embed code')}
                     className="absolute top-2 right-2"
                   >
                     <Copy className="w-4 h-4" />
                   </Button>
+                </div>
+              )}
+              
+              {!embedCode && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <Eye className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="text-sm font-medium text-blue-900">How to get your embed code:</h4>
+                      <ol className="text-sm text-blue-800 mt-2 space-y-1 list-decimal list-inside">
+                        <li>Customize your widget settings above</li>
+                        <li>Click "Generate Embed Code" button</li>
+                        <li>Copy the generated code and paste it into your website</li>
+                      </ol>
+                      <p className="text-xs text-blue-600 mt-2">
+                        Your unique Widget ID ({widgetId}) will be automatically included in the embed code.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
