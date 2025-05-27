@@ -29,7 +29,7 @@ export const getWidgetData = async (widgetId: string) => {
     }
   
     // Widget API base URL - update this to your actual domain
-    const API_BASE = 'https://testimania-trust-builder.lovable.app/api';
+    const API_BASE = 'https://testimonialpro.netlify.app/api';
     
     // Create widget container
     function createWidget(data) {
