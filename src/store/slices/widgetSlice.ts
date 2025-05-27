@@ -48,7 +48,7 @@
 //       state.config = { ...state.config, ...action.payload };
 //     },
 //     generateEmbedCode: (state) => {
-//       state.embedCode = `<script src="https://testimania-trust-builder.lovable.app/widget.js" data-widget-id="${state.widgetId}"></script>`;
+//       state.embedCode = `<script src="https://testimonialpro.netlify.app/widget.js" data-widget-id="${state.widgetId}"></script>`;
 //     },
 //     regenerateWidgetId: (state) => {
 //       state.widgetId = generateWidgetId();
@@ -114,7 +114,7 @@ const widgetSlice = createSlice({
     },
     generateEmbedCode: (state) => {
       // Use current domain for the widget script
-      const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://testimania-trust-builder.lovable.app';
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '/https://testimonialpro.netlify.app';
       
       state.embedCode = `<!-- Testimonial Widget Embed Code -->
 <!-- Copy and paste this code where you want the testimonials to appear -->
