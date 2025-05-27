@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { Toaster } from "@/components/ui/toaster";
@@ -7,7 +7,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useAppSelector } from './hooks/redux';
+import { useAppSelector, useAppDispatch } from './hooks/redux';
+import { setUser } from './store/slices/authSlice';
+import { fetchTestimonials } from './store/slices/testimonialsSlice';
+import { onAuthChange } from './services/authService';
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
 import TestimonialsPage from './pages/TestimonialsPage';
@@ -19,7 +22,25 @@ import Header from './components/Layout/Header';
 const queryClient = new QueryClient();
 
 const AppContent = () => {
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    const unsubscribe = onAuthChange((firebaseUser) => {
+      if (firebaseUser) {
+        const user = {
+          id: firebaseUser.uid,
+          email: firebaseUser.email || '',
+          name: firebaseUser.displayName || 'User',
+          businessName: 'My Business'
+        };
+        dispatch(setUser(user));
+        dispatch(fetchTestimonials(firebaseUser.uid));
+      }
+    });
+
+    return () => unsubscribe();
+  }, [dispatch]);
 
   if (!isAuthenticated) {
     return <AuthPage />;

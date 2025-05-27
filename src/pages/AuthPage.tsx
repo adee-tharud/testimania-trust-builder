@@ -68,7 +68,7 @@ const AuthPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <LoginForm />
+              <LoginForm isLogin={isLogin} />
               
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600">
@@ -84,10 +84,6 @@ const AuthPage = () => {
               </div>
             </CardContent>
           </Card>
-          
-          <div className="mt-8 text-center text-sm text-gray-500">
-            <p>Demo credentials: any email and password</p>
-          </div>
         </div>
       </div>
     </div>

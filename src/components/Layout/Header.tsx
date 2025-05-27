@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { logout } from '../../store/slices/authSlice';
+import { logoutUser } from '../../store/slices/authSlice';
 import { Button } from '../ui/button';
 import { LogOut, Bell } from 'lucide-react';
 
@@ -10,7 +10,7 @@ const Header = () => {
   const { user } = useAppSelector((state) => state.auth);
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logoutUser());
   };
 
   return (

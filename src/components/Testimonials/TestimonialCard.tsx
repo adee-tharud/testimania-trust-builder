@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { useAppDispatch } from '../../hooks/redux';
-import { updateTestimonialStatus, Testimonial } from '../../store/slices/testimonialsSlice';
+import { updateTestimonialStatus, deleteTestimonial, Testimonial } from '../../store/slices/testimonialsSlice';
 import { Button } from '../ui/button';
-import { Check, X, Star, Calendar } from 'lucide-react';
+import { Check, X, Star, Calendar, Trash2 } from 'lucide-react';
+import { toast } from '../../hooks/use-toast';
 
 interface TestimonialCardProps {
   testimonial: Testimonial;
@@ -12,12 +13,54 @@ interface TestimonialCardProps {
 const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
   const dispatch = useAppDispatch();
 
-  const handleApprove = () => {
-    dispatch(updateTestimonialStatus({ id: testimonial.id, status: 'approved' }));
+  const handleApprove = async () => {
+    try {
+      await dispatch(updateTestimonialStatus({ id: testimonial.id, status: 'approved' })).unwrap();
+      toast({
+        title: 'Testimonial approved',
+        description: 'The testimonial has been approved successfully.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to approve testimonial.',
+        variant: 'destructive',
+      });
+    }
   };
 
-  const handleReject = () => {
-    dispatch(updateTestimonialStatus({ id: testimonial.id, status: 'rejected' }));
+  const handleReject = async () => {
+    try {
+      await dispatch(updateTestimonialStatus({ id: testimonial.id, status: 'rejected' })).unwrap();
+      toast({
+        title: 'Testimonial rejected',
+        description: 'The testimonial has been rejected.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to reject testimonial.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this testimonial?')) {
+      try {
+        await dispatch(deleteTestimonial(testimonial.id)).unwrap();
+        toast({
+          title: 'Testimonial deleted',
+          description: 'The testimonial has been deleted successfully.',
+        });
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: 'Failed to delete testimonial.',
+          variant: 'destructive',
+        });
+      }
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -36,9 +79,19 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
           <h3 className="font-semibold text-gray-900">{testimonial.customerName}</h3>
           <p className="text-sm text-gray-600">{testimonial.customerEmail}</p>
         </div>
-        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(testimonial.status)}`}>
-          {testimonial.status}
-        </span>
+        <div className="flex items-center space-x-2">
+          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(testimonial.status)}`}>
+            {testimonial.status}
+          </span>
+          <Button
+            onClick={handleDelete}
+            variant="outline"
+            size="sm"
+            className="text-red-600 hover:text-red-700"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
       
       <div className="flex items-center mb-3">

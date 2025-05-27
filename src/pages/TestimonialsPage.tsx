@@ -1,8 +1,8 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../hooks/redux';
-import { setFilter } from '../store/slices/testimonialsSlice';
+import { setFilter, fetchTestimonials } from '../store/slices/testimonialsSlice';
 import TestimonialCard from '../components/Testimonials/TestimonialCard';
 import { Button } from '../components/ui/button';
 import { Plus, Filter, MessageSquare } from 'lucide-react';
@@ -10,8 +10,15 @@ import { Plus, Filter, MessageSquare } from 'lucide-react';
 const TestimonialsPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { testimonials, filter } = useAppSelector((state) => state.testimonials);
+  const { testimonials, filter, loading } = useAppSelector((state) => state.testimonials);
+  const { user } = useAppSelector((state) => state.auth);
   
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchTestimonials(user.id));
+    }
+  }, [dispatch, user]);
+
   const filteredTestimonials = testimonials.filter(testimonial => {
     if (filter === 'all') return true;
     return testimonial.status === filter;
@@ -23,6 +30,14 @@ const TestimonialsPage = () => {
     { key: 'approved', label: 'Approved', count: testimonials.filter(t => t.status === 'approved').length },
     { key: 'rejected', label: 'Rejected', count: testimonials.filter(t => t.status === 'rejected').length },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg">Loading testimonials...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
