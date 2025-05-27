@@ -43,10 +43,14 @@ export const addTestimonial = async (testimonial: Omit<Testimonial, 'id' | 'crea
 export const getTestimonials = async (userId?: string) => {
   try {
     await ensureConnection();
-    let q = query(collection(db, TESTIMONIALS_COLLECTION), orderBy('createdAt', 'desc'));
     
+    let q;
     if (userId) {
-      q = query(collection(db, TESTIMONIALS_COLLECTION), where('userId', '==', userId), orderBy('createdAt', 'desc'));
+      // Use simple query with userId filter only, then sort in memory
+      q = query(collection(db, TESTIMONIALS_COLLECTION), where('userId', '==', userId));
+    } else {
+      // For public queries, just order by createdAt
+      q = query(collection(db, TESTIMONIALS_COLLECTION), orderBy('createdAt', 'desc'));
     }
     
     const querySnapshot = await getDocs(q);
@@ -65,6 +69,11 @@ export const getTestimonials = async (userId?: string) => {
         category: data.category,
       });
     });
+    
+    // Sort in memory if we filtered by userId
+    if (userId) {
+      testimonials.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    }
     
     return testimonials;
   } catch (error) {
