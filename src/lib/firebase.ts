@@ -1,7 +1,7 @@
 
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAgJDtSU8q2LfvtlhUdrjKt-Vr_YOa8Sdc",
@@ -13,6 +13,17 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+// Initialize Auth
 export const auth = getAuth(app);
+
+// Initialize Firestore
 export const db = getFirestore(app);
+
+// Enable network for Firestore
+import { enableNetwork } from "firebase/firestore";
+enableNetwork(db).catch((error) => {
+  console.error("Failed to enable Firestore network:", error);
+});
+
 export default app;
