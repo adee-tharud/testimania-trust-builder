@@ -99,7 +99,7 @@ const CreateFormPage = () => {
   };
 
   const generateEmbedCode = () => {
-    const embedCode = `<iframe src="https://testimonials.app/form/${Date.now()}" width="100%" height="600" frameborder="0"></iframe>`;
+    const embedCode = `<iframe src="https://testimania-trust-builder.lovable.app/form/${Date.now()}" width="100%" height="600" frameborder="0"></iframe>`;
     navigator.clipboard.writeText(embedCode);
     alert('Embed code copied to clipboard!');
   };
