@@ -1,3 +1,4 @@
+
 import { 
   collection, 
   addDoc, 
@@ -7,10 +8,23 @@ import {
   deleteDoc, 
   query, 
   where, 
-  orderBy 
+  orderBy,
+  DocumentData
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Testimonial } from '../store/slices/testimonialsSlice';
+
+// Define a type for the raw testimonial data from Firestore
+interface TestimonialData {
+  customerName: string;
+  customerEmail: string;
+  rating: number;
+  message: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  category?: string;
+  userId: string;
+}
 
 export const getTestimonials = async (userId?: string): Promise<Testimonial[]> => {
   try {
@@ -30,16 +44,16 @@ export const getTestimonials = async (userId?: string): Promise<Testimonial[]> =
     console.log('Query snapshot size:', querySnapshot.size);
     
     let testimonials = querySnapshot.docs.map(doc => {
-      const data = doc.data();
+      const data = doc.data() as TestimonialData;
       return {
         id: doc.id,
-        customerName: data.customerName as string,
-        customerEmail: data.customerEmail as string,
-        rating: data.rating as number,
-        message: data.message as string,
-        status: data.status as 'pending' | 'approved' | 'rejected',
-        createdAt: data.createdAt as string,
-        category: data.category as string | undefined,
+        customerName: data.customerName,
+        customerEmail: data.customerEmail,
+        rating: data.rating,
+        message: data.message,
+        status: data.status,
+        createdAt: data.createdAt,
+        category: data.category,
       } as Testimonial;
     });
     
